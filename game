@@ -1,0 +1,57 @@
+import random
+import requests
+
+
+# Here we created a function to randomly generate a pokémon
+def random_pokemon():
+    pokemonID = random.randint(1, 151)
+    return pokemonID
+
+
+# Here we used the getPokemon to get the Pokemons from the API
+def getPokemon(pokemonID):
+    url = 'https://pokeapi.co/api/v2/pokemon/{}/'.format(
+        pokemonID)
+    response = requests.get(url)
+    pokemon = response.json()
+    return {
+        'name': pokemon['name'],
+        'id': pokemon['id'],
+        'height': pokemon['height'],
+        'weight': pokemon['weight'],
+    }
+
+
+def run():
+    print("Welcome to the Pokemon Top Trumps game.")
+    print("Player 1, please enter your name")
+    my_name = input()
+    print("Player 2, please enter your name")
+    opponent_name = input()
+
+    my_pokemon_id = random_pokemon()
+    opponent_pokemon_id = random_pokemon()
+
+    my_pokemon = getPokemon(my_pokemon_id)
+    opponent_pokemon = getPokemon(opponent_pokemon_id)
+
+    print("You were given {}: {} ".format(my_pokemon['name'], my_pokemon))
+    print("Opponent's Pokemon is {} ".format(opponent_pokemon['name']))
+
+    stat_choice = input('Which stat do you want to use to compare? (id, height, weight) ')
+
+    opponent_pokemon_id = random_pokemon()
+    print('The opponent chose {}'.format(opponent_pokemon['name']))
+
+    my_stat = my_pokemon[stat_choice]
+    opponent_stat = opponent_pokemon[stat_choice]
+
+    if my_stat > opponent_stat:
+        print('You Win!')
+    elif my_stat < opponent_stat:
+        print('You Lose!')
+    else:
+        print('Draw!')
+
+
+print(run())
